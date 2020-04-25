@@ -7,14 +7,17 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class File {
+public class FileModel {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -25,8 +28,13 @@ public class File {
 	private String filename;
 	@NotBlank(message= "Please provide a description for the file")
 	private String description;
-		
+
 	//file-user relationship
+	private String userOwner;
+	@ManyToOne
+	@JoinColumn(name= "user_id", updatable= false, nullable= false)
+	@JsonIgnore
+	private User user;
 	
 	@Column(updatable= false, nullable = false)
 	@JsonFormat(pattern = "yyyy-mm-dd")
@@ -73,5 +81,17 @@ public class File {
 	}
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
+	}
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
+	public String getUserOwner() {
+		return userOwner;
+	}
+	public void setUserOwner(String userOwner) {
+		this.userOwner = userOwner;
 	}
 }

@@ -65,6 +65,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	        .antMatchers(SecurityConstants.SIGN_UP_URLS).permitAll()	//authorize signup endpoint
 	        .antMatchers(SecurityConstants.H2URL).permitAll()
 	        .anyRequest().authenticated();
+//        	.anyRequest().permitAll();	//Authorize all requests (Developemnt ONLY)!
+
 		
 		http.addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);
 	}

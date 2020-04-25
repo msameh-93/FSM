@@ -1,12 +1,14 @@
 package com.cegedim.fsm.model;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -32,6 +34,9 @@ public class User implements UserDetails {
 	private String password;
 	@Transient
 	private String passwordConfirm;
+	/***************************/
+	@OneToMany(mappedBy= "user")
+	private List<FileModel> files;
 	/*************************/
 	@Override
 	@JsonIgnore
@@ -87,6 +92,12 @@ public class User implements UserDetails {
 	}
 	public void setPasswordConfirm(String passwordConfirm) {
 		this.passwordConfirm = passwordConfirm;
+	}
+	public List<FileModel> getFiles() {
+		return files;
+	}
+	public void setFiles(List<FileModel> files) {
+		this.files = files;
 	}
 
 }
