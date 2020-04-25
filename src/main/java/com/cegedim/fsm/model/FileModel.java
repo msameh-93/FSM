@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -22,10 +23,13 @@ public class FileModel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@NotBlank(message= "Please Provide file name")
+	@Column(unique= true)
 	private String filename;
 	@NotBlank(message= "Please provide a description for the file")
 	private String description;
-
+	@Lob
+	private byte[] file;
+	
 	//file-user relationship
 	private String userOwner;
 	@ManyToOne
@@ -45,6 +49,17 @@ public class FileModel {
 	@PreUpdate
 	public void update() {
 		this.updatedAt= new Date();
+	}
+	
+	public FileModel() {
+
+	}
+	public FileModel(@NotBlank(message = "Please Provide file name") String filename,
+			@NotBlank(message = "Please provide a description for the file") String description, byte[] file) {
+		super();
+		this.filename = filename;
+		this.description = description;
+		this.file = file;
 	}
 	/****Getters and Setters***/
 	public String getFilename() {
@@ -89,4 +104,11 @@ public class FileModel {
 	public void setUserOwner(String userOwner) {
 		this.userOwner = userOwner;
 	}
+	public byte[] getFile() {
+		return file;
+	}
+	public void setFile(byte[] file) {
+		this.file = file;
+	}
+
 }
