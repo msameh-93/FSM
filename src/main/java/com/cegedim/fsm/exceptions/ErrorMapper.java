@@ -11,6 +11,7 @@ import org.springframework.validation.FieldError;
 
 @Service
 public class ErrorMapper {
+	//Utility class to map error messages to field and send to client as a ResponseEntity
 	public ResponseEntity<Map<String, String>> validate(BindingResult bindingResult) {
 		Map<String, String> errorMap= new HashMap<>();
 		for(FieldError err : bindingResult.getFieldErrors()) {

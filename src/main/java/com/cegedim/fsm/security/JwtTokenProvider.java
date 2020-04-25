@@ -15,6 +15,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
 public class JwtTokenProvider {
+	//Handles JWT operations (encoding and decoding)
 	public String generateToken(Authentication auth) {
 		//Create claims 
 		User user=(User) auth.getPrincipal();
@@ -35,6 +36,7 @@ public class JwtTokenProvider {
 				.signWith(SignatureAlgorithm.HS512, SecurityConstants.SECRET)
 				.compact();
 	}
+	//validate token against secret key
 	public boolean validateToken(String token) {
 		try {
 			Jwts.parser().setSigningKey(SecurityConstants.SECRET).parseClaimsJws(token);
@@ -44,6 +46,7 @@ public class JwtTokenProvider {
 		}
 		return false;
 	}
+	//extract/decode user from jwt
 	public Long getUserIdFromToken(String token) {
 		Claims claims= Jwts.parser().setSigningKey(SecurityConstants.SECRET).parseClaimsJws(token).getBody();
 		return Long.parseLong((String)claims.get("id"));

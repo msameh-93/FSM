@@ -1,5 +1,6 @@
 package com.cegedim.fsm.model;
 
+//DTO for invalid log in credentials
 public class InvalidLoginResponse {
 	private String username;
 	private String password;

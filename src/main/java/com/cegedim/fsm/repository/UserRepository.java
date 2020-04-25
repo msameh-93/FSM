@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.cegedim.fsm.model.User;
 
+//Basic JPA crud operations
 @Repository
 public interface UserRepository extends CrudRepository<User, Long>{
 	User findByUsername(String username);

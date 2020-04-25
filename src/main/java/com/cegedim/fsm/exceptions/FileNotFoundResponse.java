@@ -1,5 +1,6 @@
 package com.cegedim.fsm.exceptions;
 
+//DTO for error response
 public class FileNotFoundResponse {
 	private String file;
 	

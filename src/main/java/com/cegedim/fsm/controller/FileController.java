@@ -46,6 +46,7 @@ public class FileController {
 	
 	@GetMapping("/{serial}")
 	public ResponseEntity<?> getFile(@PathVariable("serial") Long id, Principal principal) {
+		//find file through id and ensures it belongs to user
 		return new ResponseEntity<FileModel>(filesServ.getFile(id, principal.getName()), HttpStatus.OK);
 	}
 	

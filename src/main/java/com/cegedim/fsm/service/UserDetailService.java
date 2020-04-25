@@ -11,6 +11,8 @@ import com.cegedim.fsm.exceptions.UserNotFoundException;
 import com.cegedim.fsm.model.User;
 import com.cegedim.fsm.repository.UserRepository;
 
+//Used by Spring security for user handling
+//User implements User Details
 @Service
 public class UserDetailService implements UserDetailsService{
 	@Autowired

@@ -1,5 +1,6 @@
 package com.cegedim.fsm.model;
 
+//response from server to client with JWT
 public class JwtResponse {
 	private boolean valid;
 	private String token;

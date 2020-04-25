@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.cegedim.fsm.model.FileModel;
 
+//Basic JPA crud operations
 @Repository
 public interface FileRepository extends CrudRepository<FileModel, Long>{
 	FileModel getById(Long id);

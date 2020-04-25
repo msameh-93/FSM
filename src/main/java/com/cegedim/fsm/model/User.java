@@ -33,11 +33,11 @@ public class User implements UserDetails {
 	@NotBlank(message= "Please provide password")
 	private String password;
 	@Transient
-	private String passwordConfirm;
+	private String passwordConfirm;	//No need to store password in DB, only used for validation
 	/***************************/
 	@OneToMany(mappedBy= "user")
 	private List<FileModel> files;
-	/*************************/
+	/**********User Detail Service*********/
 	@Override
 	@JsonIgnore
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -62,7 +62,7 @@ public class User implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
-	/******************/
+	/********Getters and setters*******/
 	public Long getId() {
 		return id;
 	}

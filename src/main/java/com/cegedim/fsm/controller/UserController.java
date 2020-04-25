@@ -28,15 +28,15 @@ import com.cegedim.fsm.service.UserValidator;
 @RequestMapping("/api/users")
 public class UserController {
 	@Autowired
-	private UserService userServ;
+	private UserService userServ;				//Service layer
 	@Autowired
-	private ErrorMapper errorMap;
+	private ErrorMapper errorMap;				//Maps errors to fields to be consumed by react
 	@Autowired
-	private UserValidator userValidator;
+	private UserValidator userValidator;		//validates sign up user (password limits)
 	@Autowired
-	private AuthenticationManager authManager;
+	private AuthenticationManager authManager;	//Authentication authenticate user attempting to log in
 	@Autowired
-	private JwtTokenProvider jwtTokenProvider;
+	private JwtTokenProvider jwtTokenProvider;	//used to assign a jwt to user if succesfully logged in
 	
 	@PostMapping("/signup")
 	public ResponseEntity<?> signUp(@RequestBody@Valid User user, BindingResult bindingResult) {
@@ -57,8 +57,9 @@ public class UserController {
 				new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword()));
 		
 		SecurityContextHolder.getContext().setAuthentication(auth);
+		//Assign jwt Bearer...
 		String jwt= SecurityConstants.TOKEN_PREFIX + jwtTokenProvider.generateToken(auth);
-				
+		//Send jwt back to client
 		return new ResponseEntity<JwtResponse>(new JwtResponse(true, jwt), HttpStatus.OK);
 	}
 }

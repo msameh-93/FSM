@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 //First error Authentication level
 @Component
 public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
+	//Handles Authentication errors
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException, ServletException {

@@ -13,11 +13,11 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepo;
 	@Autowired
-	private BCryptPasswordEncoder bCryptPass;
+	private BCryptPasswordEncoder bCryptPass;	//Encrypt password with key before persisting to DB
 	
 	public User save(User user) {
 		try {
-			user.setPasswordConfirm("");
+			user.setPasswordConfirm("");	//remvoe password confirm
 			user.setPassword(bCryptPass.encode(user.getPassword()));
 			return userRepo.save(user);
 		} catch(Exception e) {

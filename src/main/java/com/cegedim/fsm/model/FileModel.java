@@ -21,9 +21,6 @@ public class FileModel {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	/*
-	 * Serial Number assigned from user name which will be unique
-	 */
 	@NotBlank(message= "Please Provide file name")
 	private String filename;
 	@NotBlank(message= "Please provide a description for the file")
@@ -35,7 +32,7 @@ public class FileModel {
 	@JoinColumn(name= "user_id", updatable= false, nullable= false)
 	@JsonIgnore
 	private User user;
-	
+	/************Dates************/
 	@Column(updatable= false, nullable = false)
 	@JsonFormat(pattern = "yyyy-mm-dd")
 	private Date uploadedDate;
@@ -49,9 +46,7 @@ public class FileModel {
 	public void update() {
 		this.updatedAt= new Date();
 	}
-	/********************************/
 	/****Getters and Setters***/
-
 	public String getFilename() {
 		return filename;
 	}

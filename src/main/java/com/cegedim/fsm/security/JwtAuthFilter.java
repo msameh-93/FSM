@@ -25,17 +25,24 @@ public class JwtAuthFilter extends OncePerRequestFilter{
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 	
+	//Called on each request, filter
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		try {
+			//Get Bearer Token from client header request
 			String bearerToken= request.getHeader(SecurityConstants.HEADER_STRING);
+			//Check if header is not empty and it starts wit "Bearer"
 			if(StringUtils.hasText(bearerToken) && bearerToken.startsWith(SecurityConstants.TOKEN_PREFIX)) {
+				//Extract JWT
 				String jwt= bearerToken.substring(7, bearerToken.length());
+				//Ensures JWT is not empty and validate token 
 				if(StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
+					//extract user id from decoding token
 					Long userId= jwtTokenProvider.getUserIdFromToken(jwt);
+					//get user that belongs to this token from DB
 					User user= userDetailService.loadUserById(userId);
-					//Authenticator
+					//Authenticator with username
 					UsernamePasswordAuthenticationToken authToken= 
 							new UsernamePasswordAuthenticationToken(user.getUsername(), null, Collections.emptyList());
 					//Set Authenticator details
@@ -47,6 +54,7 @@ public class JwtAuthFilter extends OncePerRequestFilter{
 		} catch(Exception e) {
 			System.out.println("ERROR IN FILTER");
 		}
+		//Call next in filter chain
 		filterChain.doFilter(request, response);
 	}
 	

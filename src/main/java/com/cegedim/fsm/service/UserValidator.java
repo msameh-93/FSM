@@ -6,6 +6,8 @@ import org.springframework.validation.Validator;
 
 import com.cegedim.fsm.model.User;
 
+
+//Utility service class used to validate user attempting to log in
 @Service
 public class UserValidator implements Validator{
 	@Override

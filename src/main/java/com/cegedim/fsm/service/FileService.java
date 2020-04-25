@@ -36,20 +36,25 @@ public class FileService {
 		
 		return filesRepo.save(file);
 	}
+	
 	public Iterable<FileModel> getAllFiles(String principalName) {
-		
+		//File all files belonging to the logged in user
 		return filesRepo.findAllByUserOwner(principalName);
 	}
+	
 	public FileModel getFile(Long id, String principalName) {
+		//Attempt to get file by id
 		FileModel file= filesRepo.getById(id);
 		if(file==null) {
 			throw new FileNotFoundException("No file with serial: '" + id + "' exists in Database");
 		}
+		//check if it belongs to user
 		if(!file.getUserOwner().equals(principalName)) {
 			throw new FileNotFoundException("This file does not belong to this user");
 		}
 		return file;
 	}
+	
 	public void deleteFile(FileModel file) {
 		//WIll be sent correct file in controller layer
 		filesRepo.delete(file);

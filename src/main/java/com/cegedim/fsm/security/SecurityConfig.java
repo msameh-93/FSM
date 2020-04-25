@@ -18,6 +18,7 @@ import com.cegedim.fsm.service.UserDetailService;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+	/********Beans*********/
 	@Bean
 	public BCryptPasswordEncoder bCrypt() {
 		return new BCryptPasswordEncoder();
@@ -36,10 +37,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private JwtAuthEntryPoint jwtAuthEntryPoint;
 	
+	//COnfigure auth manager
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailServ).passwordEncoder(bCrypt());
 	}
+	//COnfigure authentication configuration for HTTP requests
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable()
@@ -67,7 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	        .anyRequest().authenticated();
 //        	.anyRequest().permitAll();	//Authorize all requests (Developemnt ONLY)!
 
-		
+		//Add filter
 		http.addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 }
