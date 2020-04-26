@@ -34,6 +34,7 @@ public class User implements UserDetails {
 	private String password;
 	@Transient
 	private String passwordConfirm;	//No need to store password in DB, only used for validation
+	private Integer fileSerial= 0;
 	/***************************/
 	@OneToMany(mappedBy= "user")
 	private List<FileModel> files;
@@ -99,5 +100,10 @@ public class User implements UserDetails {
 	public void setFiles(List<FileModel> files) {
 		this.files = files;
 	}
-
+	public Integer getFileSerial() {
+		return fileSerial;
+	}
+	public void setFileSerial(Integer fileSerial) {
+		this.fileSerial = fileSerial;
+	}
 }

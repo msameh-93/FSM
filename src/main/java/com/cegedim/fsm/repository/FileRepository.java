@@ -10,4 +10,5 @@ import com.cegedim.fsm.model.FileModel;
 public interface FileRepository extends CrudRepository<FileModel, Long>{
 	FileModel getById(Long id);
 	Iterable<FileModel> findAllByUserOwner(String fileOwner);
+	FileModel findAllByFilename(String filename);
 }

@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -23,12 +22,13 @@ public class FileModel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@NotBlank(message= "Please Provide file name")
-	@Column(unique= true)
 	private String filename;
 	@NotBlank(message= "Please provide a description for the file")
 	private String description;
-	@Lob
-	private byte[] file;
+	private String path;
+	private String serial;
+//	@Lob
+//	private byte[] file;
 	
 	//file-user relationship
 	private String userOwner;
@@ -55,11 +55,11 @@ public class FileModel {
 
 	}
 	public FileModel(@NotBlank(message = "Please Provide file name") String filename,
-			@NotBlank(message = "Please provide a description for the file") String description, byte[] file) {
+			@NotBlank(message = "Please provide a description for the file") String description/*, byte[] file*/) {
 		super();
 		this.filename = filename;
 		this.description = description;
-		this.file = file;
+//		this.file = file;
 	}
 	/****Getters and Setters***/
 	public String getFilename() {
@@ -104,11 +104,23 @@ public class FileModel {
 	public void setUserOwner(String userOwner) {
 		this.userOwner = userOwner;
 	}
-	public byte[] getFile() {
-		return file;
+//	public byte[] getFile() {
+//		return file;
+//	}
+//	public void setFile(byte[] file) {
+//		this.file = file;
+//	}
+	public String getPath() {
+		return path;
 	}
-	public void setFile(byte[] file) {
-		this.file = file;
+	public void setPath(String path) {
+		this.path = path;
 	}
-
+	public String getSerial() {
+		return serial;
+	}
+	public void setSerial(String serial) {
+		this.serial = serial;
+	}
+	
 }
