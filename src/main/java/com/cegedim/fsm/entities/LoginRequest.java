@@ -1,4 +1,4 @@
-package com.cegedim.fsm.model;
+package com.cegedim.fsm.entities;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

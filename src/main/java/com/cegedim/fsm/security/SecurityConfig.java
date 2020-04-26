@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -17,6 +18,7 @@ import com.cegedim.fsm.service.UserDetailService;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	/********Beans*********/
 	@Bean
@@ -36,7 +38,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private UserDetailService userDetailServ;
 	@Autowired
 	private JwtAuthEntryPoint jwtAuthEntryPoint;
-	
+	@Autowired
+	private AccessDeniedHandle accessDeniendHandler;
 	//COnfigure auth manager
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -46,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable()
-		.exceptionHandling().authenticationEntryPoint(jwtAuthEntryPoint)
+		.exceptionHandling().authenticationEntryPoint(jwtAuthEntryPoint).accessDeniedHandler(accessDeniendHandler)
 		.and()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
@@ -64,7 +67,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	                "/**/*.json",
 	                "/**/*.map",
 	                "/**/*.css",
-	                "/**/*.js").permitAll()
+	                "/**/*.js",
+	                "/swagger-resources/**",
+	                "/swagger-ui.html",
+	                "/v2/api-docs",
+	                "/webjars/**").permitAll()
 	        .antMatchers(SecurityConstants.SIGN_UP_URLS).permitAll()	//authorize signup endpoint
 	        .antMatchers(SecurityConstants.H2URL).permitAll()
 	        .anyRequest().authenticated();

@@ -1,7 +1,6 @@
 package com.cegedim.fsm.security;
 
 import java.io.IOException;
-import java.util.Collections;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -15,7 +14,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.cegedim.fsm.model.User;
+import com.cegedim.fsm.entities.User;
 import com.cegedim.fsm.service.UserDetailService;
 
 
@@ -44,7 +43,7 @@ public class JwtAuthFilter extends OncePerRequestFilter{
 					User user= userDetailService.loadUserById(userId);
 					//Authenticator with username
 					UsernamePasswordAuthenticationToken authToken= 
-							new UsernamePasswordAuthenticationToken(user.getUsername(), null, Collections.emptyList());
+							new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities());
 					//Set Authenticator details
 					authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 					//Assign Authenticator to context

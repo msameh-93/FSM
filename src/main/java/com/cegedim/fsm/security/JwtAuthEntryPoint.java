@@ -11,7 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
-import com.cegedim.fsm.model.InvalidLoginResponse;
+import com.cegedim.fsm.entities.NotAuthResponse;
 import com.google.gson.Gson;
 
 //First error Authentication level
@@ -22,7 +22,7 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException, ServletException {
 		
-		String jsonInvalidLoginResponse= new Gson().toJson(new InvalidLoginResponse());
+		String jsonInvalidLoginResponse= new Gson().toJson(new NotAuthResponse());
 		
 		response.setContentType("application/json");
 		response.setStatus(HttpStatus.UNAUTHORIZED.value());

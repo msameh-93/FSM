@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.cegedim.fsm.entities.User;
 import com.cegedim.fsm.exceptions.UserNotFoundException;
-import com.cegedim.fsm.model.User;
 import com.cegedim.fsm.repository.UserRepository;
 
 @Service

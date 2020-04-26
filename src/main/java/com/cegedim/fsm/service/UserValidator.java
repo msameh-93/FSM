@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import com.cegedim.fsm.model.User;
+import com.cegedim.fsm.entities.User;
 
 
 //Utility service class used to validate user attempting to log in

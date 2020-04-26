@@ -7,8 +7,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cegedim.fsm.entities.User;
 import com.cegedim.fsm.exceptions.UserNotFoundException;
-import com.cegedim.fsm.model.User;
 import com.cegedim.fsm.repository.UserRepository;
 
 //Used by Spring security for user handling

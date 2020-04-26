@@ -4,7 +4,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,18 +26,24 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.cegedim.fsm.model.FileModel;
+import com.cegedim.fsm.dto.FileDTO;
+import com.cegedim.fsm.entities.FileModel;
 import com.cegedim.fsm.service.FileService;
+
+import io.swagger.annotations.Api;
 
 @RestController
 @RequestMapping("/api/files")
+@Api
 public class FileController {
 	@Autowired
 	private FileService filesServ;	//file service layer
 	private Map<String, String> errorMap= new HashMap<>();
 
+	@PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
 	@PostMapping
 	public ResponseEntity<?> saveFile(
+			@RequestPart(name= "id", required= false) Long id,
 			@RequestPart(name= "filename", required= false) String filename,
 			@RequestPart(name= "description", required= false) String description,
 			@RequestPart(name= "file", required= false)MultipartFile file,
@@ -51,7 +60,12 @@ public class FileController {
 		if(!errorMap.isEmpty()) {
 			return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
 		}
-		FileModel myFile= new FileModel(filename, description);	
+		FileModel myFile= null;
+		if(id!=null) {
+			myFile= filesServ.getFile(id, principal.getName());			
+		} else {
+			myFile= new FileModel(filename, description, file.getOriginalFilename());
+		}
 		//Save to one folder path
 		Path currentPath = Paths.get(".");
 		Path absolutePath = currentPath.toAbsolutePath();
@@ -62,12 +76,36 @@ public class FileController {
 		/****************************/
 		return new ResponseEntity<FileModel>(filesServ.saveOrUpdate(myFile, principal.getName()), HttpStatus.OK);
 	}
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+	@PostMapping("/update")
+	public ResponseEntity<?> updateFile(
+			@RequestPart(name= "id", required= false) String myId,
+			@RequestPart(name= "filename", required= false) String filename,
+			Principal principal) throws Exception{
+		System.out.println("HERE");
+		Long id= Long.valueOf(myId);
+		FileModel myFile= null;
+		errorMap.clear();
+		if(id!=null) {
+			myFile= filesServ.getFile(id, principal.getName());			
+		} else {
+			errorMap.put("id", "Please Provide a valid id for file");
+			return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
+		}
+		myFile.setId(id);
+		myFile.setFilename(filename);
+		filesServ.saveOrUpdate(myFile, principal.getName());
+		/****************************/
+		return new ResponseEntity<String>("Updated successfully", HttpStatus.OK);
+	}
+	//Download
+	@PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
 	@RequestMapping(method = RequestMethod.GET, value = "/download/{serial}", produces= "text/plain")
 	public HttpEntity<?> download(@PathVariable("serial") Long id, Principal principal) throws Exception {
 		FileModel fileEntity= filesServ.getFile(id, principal.getName());
 
 		//Read from directory path
-		Path currentPath= Paths.get(fileEntity.getPath() + fileEntity.getFilename());
+		Path currentPath= Paths.get(fileEntity.getPath() + fileEntity.getOriginalFilename());
 		byte[] documentBody= Files.readAllBytes(currentPath );
 		//Set headers for download
 	    HttpHeaders header = new HttpHeaders();
@@ -78,21 +116,33 @@ public class FileController {
 
 	    return new HttpEntity<byte[]>(documentBody, header);
 	}
+	@PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
 	@GetMapping
 	public ResponseEntity<?> getAllFiles(Principal principal) {
 		//get all files assigned to logged in user (principal assigned in filter)
-		return new ResponseEntity<Iterable<FileModel>>(filesServ.getAllFiles(principal.getName()), HttpStatus.OK);
+		//Get files and prepare DTO
+		Iterable<FileModel> files= filesServ.getAllFiles(principal.getName());
+		List<FileDTO> filesDTO= new ArrayList<>();
+		for(FileModel file : files) {
+			filesDTO.add(FileDTO.convertoToDTO(file));
+		}
+
+		return new ResponseEntity<Iterable<FileDTO>>(filesDTO, HttpStatus.OK);
 	}
-	
+	@PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
 	@GetMapping("/{serial}")
 	public ResponseEntity<?> getFile(@PathVariable("serial") Long id, Principal principal) {
 		//find file through id and ensures it belongs to user
-		return new ResponseEntity<FileModel>(filesServ.getFile(id, principal.getName()), HttpStatus.OK);
+		//Prepare DTO
+		FileModel file= filesServ.getFile(id, principal.getName());
+		FileDTO filesDTO= FileDTO.convertoToDTO(file);
+		
+		return new ResponseEntity<FileDTO>(filesDTO, HttpStatus.OK);
 	}
-	
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
 	@DeleteMapping("/{serial}")
 	public ResponseEntity<?> deleteFile(@PathVariable("serial") Long id, Principal principal) {
-		filesServ.deleteFile(filesServ.getFile(id, principal.getName()), principal.getName());
+		filesServ.deleteFile(filesServ.getFile(id, principal.getName()));
 		return new ResponseEntity<String>("File with serial: '" + id + "' succesfully deleted", HttpStatus.OK);
 	}
 }

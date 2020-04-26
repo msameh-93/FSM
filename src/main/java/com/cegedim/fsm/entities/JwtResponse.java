@@ -1,4 +1,4 @@
-package com.cegedim.fsm.model;
+package com.cegedim.fsm.entities;
 
 //response from server to client with JWT
 public class JwtResponse {

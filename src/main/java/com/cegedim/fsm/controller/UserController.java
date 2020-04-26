@@ -15,17 +15,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cegedim.fsm.entities.JwtResponse;
+import com.cegedim.fsm.entities.LoginRequest;
+import com.cegedim.fsm.entities.User;
 import com.cegedim.fsm.exceptions.ErrorMapper;
-import com.cegedim.fsm.model.JwtResponse;
-import com.cegedim.fsm.model.LoginRequest;
-import com.cegedim.fsm.model.User;
 import com.cegedim.fsm.security.JwtTokenProvider;
 import com.cegedim.fsm.security.SecurityConstants;
 import com.cegedim.fsm.service.UserService;
 import com.cegedim.fsm.service.UserValidator;
 
+import io.swagger.annotations.Api;
+
 @RestController
 @RequestMapping("/api/users")
+@Api
 public class UserController {
 	@Autowired
 	private UserService userServ;				//Service layer

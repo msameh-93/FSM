@@ -3,9 +3,9 @@ package com.cegedim.fsm.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cegedim.fsm.entities.FileModel;
+import com.cegedim.fsm.entities.User;
 import com.cegedim.fsm.exceptions.FileNotFoundException;
-import com.cegedim.fsm.model.FileModel;
-import com.cegedim.fsm.model.User;
 import com.cegedim.fsm.repository.FileRepository;
 import com.cegedim.fsm.repository.UserRepository;
 
@@ -26,6 +26,14 @@ public class FileService {
 			//Use service getFIle method to try to get file
 			//if errors, will be throw at that method
 			getFile(file.getId(), principalName);
+		} else {
+			//Set user files relationship
+			User user= userRepo.findByUsername(principalName);
+			file.setUser(user);
+			file.setUserOwner(principalName);
+			//Set serial
+			user.setFileSerial(user.getFileSerial()+1);
+			file.setSerial(String.valueOf(user.getFileSerial()));
 		}
 		if(file.getFilename()!=null) {
 			FileModel existingFile= filesRepo.findAllByFilename(file.getFilename());
@@ -34,15 +42,6 @@ public class FileService {
 				throw new FileNotFoundException("A file with the same name exists in your repository, Please select another one!");
 			}
 		}
-		
-		//Set user files relationship
-		User user= userRepo.findByUsername(principalName);
-		file.setUser(user);
-		file.setUserOwner(principalName);
-		//Set serial
-		user.setFileSerial(user.getFileSerial()+1);
-		file.setSerial(String.valueOf(user.getFileSerial()));
-
 		return filesRepo.save(file);
 	}
 	
@@ -64,10 +63,8 @@ public class FileService {
 		return file;
 	}
 	
-	public void deleteFile(FileModel file, String principalName) {
+	public void deleteFile(FileModel file) {
 		//WIll be sent correct file in controller layer
-		User user= userRepo.findByUsername(principalName);
-		user.setFileSerial(user.getFileSerial()+1);
 		filesRepo.delete(file);
 	}
 }

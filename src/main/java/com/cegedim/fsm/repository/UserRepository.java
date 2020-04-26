@@ -3,7 +3,7 @@ package com.cegedim.fsm.repository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.cegedim.fsm.model.User;
+import com.cegedim.fsm.entities.User;
 
 //Basic JPA crud operations
 @Repository
