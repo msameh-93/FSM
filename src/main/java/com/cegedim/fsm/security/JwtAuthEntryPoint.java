@@ -26,6 +26,8 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
 		
 		response.setContentType("application/json");
 		response.setStatus(HttpStatus.UNAUTHORIZED.value());
-		response.getWriter().print(jsonInvalidLoginResponse);
+		
+		//response.getWriter().print(jsonInvalidLoginResponse);
+		request.getRequestDispatcher("/").forward(request, response);
 	}
 }
