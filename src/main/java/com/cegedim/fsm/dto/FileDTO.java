@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class FileDTO {
 	private Long id;
+	private String serial;
 	private String filename;
 	private String description;
 	@JsonFormat(pattern= "yyyy-MM-dd")
@@ -16,10 +17,10 @@ public class FileDTO {
 		FileDTO fileDTO= new FileDTO();
 		
 		fileDTO.id= file.getId();
+		fileDTO.serial= file.getSerial();
 		fileDTO.filename= file.getFilename();
 		fileDTO.description= file.getDescription();
 		fileDTO.uploadDate= file.getUploadedDate();
-		System.out.println(fileDTO);
 		return fileDTO;
 	}
 
@@ -47,11 +48,26 @@ public class FileDTO {
 		this.description = description;
 	}
 
+	public String getSerial() {
+		return serial;
+	}
+
+	public void setSerial(String serial) {
+		this.serial = serial;
+	}
+
+	public Date getUploadDate() {
+		return uploadDate;
+	}
+
+	public void setUploadDate(Date uploadDate) {
+		this.uploadDate = uploadDate;
+	}
+
 	@Override
 	public String toString() {
-		return "FileDTO [id=" + id + ", filename=" + filename + ", description=" + description + ", uploadDate="
-				+ uploadDate + "]";
+		return "~~~~~FileDTO [id=" + id + ", serial=" + serial + ", filename=" + filename + ", description=" + description
+				+ ", uploadDate=" + uploadDate + "]";
 	}
-	
-	
+
 }

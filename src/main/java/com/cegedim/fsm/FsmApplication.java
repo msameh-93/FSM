@@ -10,3 +10,14 @@ public class FsmApplication {
 	}
 
 }
+//War packaging
+//@SpringBootApplication
+//public class FsmApplication extends SpringBootServletInitializer{
+//	public static void main(String[] args) {
+//		SpringApplication.run(FsmApplication.class, args);
+//	}
+//    @Override
+//    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+//        return application.sources(BootWarApplication.class);
+//    }
+//}

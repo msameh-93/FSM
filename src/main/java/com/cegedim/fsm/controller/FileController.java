@@ -76,6 +76,7 @@ public class FileController {
 		/****************************/
 		return new ResponseEntity<FileModel>(filesServ.saveOrUpdate(myFile, principal.getName()), HttpStatus.OK);
 	}
+	//Rename
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
 	@PostMapping("/update")
 	public ResponseEntity<?> updateFile(
@@ -92,8 +93,11 @@ public class FileController {
 			errorMap.put("id", "Please Provide a valid id for file");
 			return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
 		}
+		int dotIndex= myFile.getFilename().indexOf(".");
+		String extension= myFile.getFilename().substring(dotIndex, myFile.getFilename().length());
+
 		myFile.setId(id);
-		myFile.setFilename(filename);
+		myFile.setFilename(filename+extension);
 		filesServ.saveOrUpdate(myFile, principal.getName());
 		/****************************/
 		return new ResponseEntity<String>("Updated successfully", HttpStatus.OK);
@@ -126,7 +130,6 @@ public class FileController {
 		for(FileModel file : files) {
 			filesDTO.add(FileDTO.convertoToDTO(file));
 		}
-
 		return new ResponseEntity<Iterable<FileDTO>>(filesDTO, HttpStatus.OK);
 	}
 	@PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
